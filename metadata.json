@@ -1,0 +1,6 @@
+{
+  "name": "Book Asset CSV Entry Filler",
+  "description": "Fill missing chapter asset rows in book metadata CSV files from asset folders or filename lists with automatic prefix matching and validation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
