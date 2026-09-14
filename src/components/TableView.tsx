@@ -13,6 +13,7 @@ import {
   Table as TableIcon,
   Layers,
   Sparkles,
+  ListOrdered,
 } from 'lucide-react';
 import { CsvRow } from '../types';
 import { currentChapter } from '../services/csvFiller';
@@ -24,6 +25,8 @@ interface TableViewProps {
   onDeleteRow: (rowIndex: number) => void;
   onDuplicateRow: (rowIndex: number) => void;
   onAddNewRow: (chapterNumber?: number) => void;
+  onResequenceChapter?: (chapterNum: number) => void;
+  onResequenceAll?: () => void;
 }
 
 export const TableView: React.FC<TableViewProps> = ({
@@ -33,6 +36,8 @@ export const TableView: React.FC<TableViewProps> = ({
   onDeleteRow,
   onDuplicateRow,
   onAddNewRow,
+  onResequenceChapter,
+  onResequenceAll,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [rowTypeFilter, setRowTypeFilter] = useState<string>('ALL');
@@ -278,6 +283,18 @@ export const TableView: React.FC<TableViewProps> = ({
             </button>
           </div>
 
+          {/* Renumber All */}
+          {onResequenceAll && (
+            <button
+              onClick={() => onResequenceAll()}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 transition-colors shadow-2xs cursor-pointer"
+              title="Renumber asset rows consecutively (1, 2, 3...) across all chapters"
+            >
+              <ListOrdered className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden sm:inline">Renumber All (1..N)</span>
+            </button>
+          )}
+
           {/* Add custom row */}
           <button
             onClick={() => onAddNewRow()}
@@ -379,6 +396,16 @@ export const TableView: React.FC<TableViewProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {section.chapterNum !== null && onResequenceChapter && section.items.length > 0 && (
+                        <button
+                          onClick={() => onResequenceChapter(section.chapterNum!)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-600 bg-white hover:bg-slate-100 border border-slate-200 cursor-pointer shadow-2xs"
+                          title={`Renumber all ${section.items.length} assets in CH ${section.chapterNum} consecutively (1..${section.items.length})`}
+                        >
+                          <ListOrdered className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Renumber (1..{section.items.length})</span>
+                        </button>
+                      )}
                       {section.chapterNum !== null && (
                         <button
                           onClick={() => onAddNewRow(section.chapterNum!)}

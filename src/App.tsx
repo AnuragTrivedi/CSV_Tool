@@ -205,6 +205,54 @@ export default function App() {
     });
   };
 
+  // Resequence chapter asset rows consecutively (1, 2, 3...)
+  const handleResequenceChapter = (chapterNum: number) => {
+    setRows(prev => {
+      const copy = [...prev];
+      let inTargetChapter = false;
+      let assetCounter = 1;
+
+      for (let i = 0; i < copy.length; i++) {
+        const ch = currentChapter(copy[i]);
+        if (ch === chapterNum) {
+          inTargetChapter = true;
+          continue;
+        } else if (inTargetChapter && ch !== null) {
+          break;
+        }
+
+        if (inTargetChapter && copy[i].rowType?.trim() === 'chapter_assets') {
+          copy[i] = { ...copy[i], sequence: String(assetCounter++) };
+        }
+      }
+
+      return copy;
+    });
+  };
+
+  const handleResequenceAllChapters = () => {
+    setRows(prev => {
+      const copy = [...prev];
+      let currentCh: number | null = null;
+      let assetCounter = 1;
+
+      for (let i = 0; i < copy.length; i++) {
+        const ch = currentChapter(copy[i]);
+        if (ch !== null) {
+          currentCh = ch;
+          assetCounter = 1;
+          continue;
+        }
+
+        if (currentCh !== null && copy[i].rowType?.trim() === 'chapter_assets') {
+          copy[i] = { ...copy[i], sequence: String(assetCounter++) };
+        }
+      }
+
+      return copy;
+    });
+  };
+
   // Export CSV
   const handleExportCsv = () => {
     if (rows.length === 0) return;
@@ -290,6 +338,8 @@ export default function App() {
               setTargetChapterForAdd(chNum);
               setIsAddRowOpen(true);
             }}
+            onResequenceChapter={handleResequenceChapter}
+            onResequenceAll={handleResequenceAllChapters}
           />
         ) : (
           <div className="bg-white rounded-xl border border-slate-200 p-12 text-center shadow-xs">

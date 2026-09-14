@@ -304,7 +304,8 @@ def populate(
             item_numbers[asset_type] += 1
             if filename.casefold() in existing_urls:
                 continue
-            sequence = asset_sequences.get(asset_type, next_sequence)
+            sequence = next_sequence
+            next_sequence += 1
             column_values = {
                 **DEFAULT_ROW_VALUES,
                 **TYPE_SPECIFIC_DEFAULT_COLUMN_VALUES.get(asset_type, {}),
@@ -313,8 +314,6 @@ def populate(
             result.append(
                 make_row(row_base, filename, asset_type, item_numbers[asset_type], asset_counts[asset_type], sequence, column_values)
             )
-            if asset_type not in asset_sequences:
-                next_sequence += 1
             inserted += 1
 
     for row in rows:

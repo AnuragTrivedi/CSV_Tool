@@ -395,8 +395,8 @@ export function populateCsvRows(
       const countForType = assetCounts[item.assetType] || 1;
       const rowName = countForType === 1 ? displayName : `${displayName} - ${itemNumbers[item.assetType]}`;
 
-      const fixedSequence = config.assetSequences[item.assetType];
-      const sequenceValue = fixedSequence !== undefined ? String(fixedSequence) : String(nextSeq);
+      const sequenceValue = String(nextSeq);
+      nextSeq++;
 
       const typeOverrides = config.typeSpecificDefaultValues[item.assetType] || {};
       const newRow: CsvRow = {
@@ -415,10 +415,6 @@ export function populateCsvRows(
       result.push(newRow);
       insertedCount++;
       chaptersWithNewAssetsSet.add(chapter);
-
-      if (fixedSequence === undefined) {
-        nextSeq++;
-      }
     }
   };
 

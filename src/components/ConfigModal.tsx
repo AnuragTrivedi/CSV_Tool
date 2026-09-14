@@ -178,12 +178,16 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: SEQUENCES */}
+          {/* TAB 2: ENTRY ORDER */}
           {activeTab === 'sequences' && (
             <div className="space-y-4">
-              <p className="text-slate-600">
-                Fixed sequence numbers assigned to each asset type within a chapter (standard: Course Book = 1, Animation = 2, etc.):
-              </p>
+              <div className="bg-indigo-50/60 border border-indigo-200/80 rounded-xl p-3 text-xs text-indigo-900 leading-relaxed">
+                <p className="font-semibold mb-0.5">Asset Entry & Precedence Order in CSV</p>
+                <p className="text-slate-600">
+                  Defines which asset type is entered 1st, 2nd, 3rd, etc. under each chapter. 
+                  In the generated CSV, the <code className="px-1 py-0.5 bg-white border border-indigo-200 rounded font-mono text-indigo-700">sequence</code> column is automatically numbered consecutively (<span className="font-mono font-semibold">1, 2, 3, 4...</span>) for each row.
+                </p>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {ASSET_TYPE_DEFINITIONS.map((def) => {
                   const seqVal = localConfig.assetSequences[def.id] ?? '';
@@ -192,18 +196,26 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                       key={def.id}
                       className="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50 flex items-center justify-between"
                     >
-                      <span className="font-semibold text-slate-800">
-                        {def.name}
-                      </span>
-                      <div className="w-20">
-                        <input
-                          type="number"
-                          min="1"
-                          max="999"
-                          value={seqVal}
-                          onChange={(e) => handleSequenceChange(def.id, e.target.value)}
-                          className="w-full text-center font-bold px-2 py-1 bg-white border border-slate-300 rounded text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
-                        />
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-slate-800">
+                          {def.name}
+                        </span>
+                        <span className="text-[11px] text-slate-500">
+                          Group: {def.groupName}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] text-slate-400 uppercase font-medium">Order:</span>
+                        <div className="w-16">
+                          <input
+                            type="number"
+                            min="1"
+                            max="999"
+                            value={seqVal}
+                            onChange={(e) => handleSequenceChange(def.id, e.target.value)}
+                            className="w-full text-center font-bold px-2 py-1 bg-white border border-slate-300 rounded text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                          />
+                        </div>
                       </div>
                     </div>
                   );
