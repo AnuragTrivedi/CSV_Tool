@@ -8,6 +8,7 @@ import {
   BookOpen,
   Layers,
   FileSpreadsheet,
+  Laptop,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -19,6 +20,7 @@ interface HeaderProps {
   onReset: () => void;
   onOpenConfig: () => void;
   onOpenRawView: () => void;
+  onOpenDesktopExe: () => void;
   onExportCsv: () => void;
   hasRows: boolean;
 }
@@ -32,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenConfig,
   onOpenRawView,
+  onOpenDesktopExe,
   onExportCsv,
   hasRows,
 }) => {
@@ -101,6 +104,16 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Settings2 className="w-3.5 h-3.5 text-slate-600" />
               <span>Rules & Prefixes</span>
+            </button>
+
+            <button
+              id="header-desktop-exe-btn"
+              onClick={onOpenDesktopExe}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors border border-blue-200 cursor-pointer"
+              title="Download standalone Windows executable or desktop app package"
+            >
+              <Laptop className="w-3.5 h-3.5 text-blue-600" />
+              <span>Desktop App (.exe)</span>
             </button>
 
             {hasRows && (

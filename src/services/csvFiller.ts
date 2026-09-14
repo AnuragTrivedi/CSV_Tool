@@ -10,8 +10,8 @@ import {
 
 export const ASSET_TYPE_DEFINITIONS: AssetTypeDefinition[] = [
   { id: 'Course Book', name: 'Course Book', groupName: 'Course Book', defaultPrefix: 'CB', defaultSequence: 1 },
+  { id: 'Read Aloud', name: 'Read Aloud', groupName: 'Read aloud', defaultPrefix: 'VID_RA', defaultSequence: 3 },
   { id: 'Animation', name: 'Animation', groupName: 'Animation', defaultPrefix: 'VID', defaultSequence: 2 },
-  { id: 'Read Aloud', name: 'Read Aloud', groupName: 'Read aloud', defaultPrefix: 'RA', defaultSequence: 3 },
   { id: 'Audio', name: 'Audio', groupName: 'Audio', defaultPrefix: 'AUD', defaultSequence: 4 },
   { id: 'Listening Text', name: 'Listening Text', groupName: 'Listening Text', defaultPrefix: 'LT', defaultSequence: 5 },
   { id: 'Teacher Manual', name: 'Teacher Manual', groupName: "Teacher's Manual", defaultPrefix: 'TM', defaultSequence: 6, openInMainContent: true },
@@ -23,12 +23,12 @@ export const ASSET_TYPE_DEFINITIONS: AssetTypeDefinition[] = [
 
 export const DEFAULT_PREFIXES: Record<string, string> = {
   'Course Book': 'CB',
+  'Read Aloud': 'VID_RA',
   'Animation': 'VID',
   'Interactivities': 'AC',
   'Teacher Manual': 'TM',
   'Worksheet': 'WS',
   'Audio': 'AUD',
-  'Read Aloud': 'RA',
   'Listening Text': 'LT',
   'Detailed Solution': 'SOL',
   'Answer Key': 'AK',
@@ -133,29 +133,79 @@ export function scanAssetFiles(
     const remainder = match[2];
     let matchedType = false;
 
-    for (const typeDef of ASSET_TYPE_DEFINITIONS) {
-      const prefix = (config.prefixes[typeDef.id] || '').trim();
-      if (prefix && remainder.toLowerCase().startsWith(prefix.toLowerCase())) {
-        const suffix = remainder.slice(prefix.length);
-        const numberMatch = suffix.match(/\d+/);
-        const sortKey: number | string = numberMatch
-          ? parseInt(numberMatch[0], 10)
-          : suffix.toUpperCase();
+    // 1. Explicit pattern matching for Read Aloud with '_VID_RA' (and 'VID_RA' / 'RA')
+    // This guarantees that files like SPNK_CL04_CH01_VID_RA01 are accurately processed as
+    // 'Read Aloud' rather than being incorrectly matched by 'VID' (Animation).
+    const readAloudConfigPrefix = (config.prefixes['Read Aloud'] || 'VID_RA').trim();
+    const readAloudRegex = /^(_?VID_RA|_?RA)(.*)$/i;
+    const configClean = readAloudConfigPrefix.replace(/^_/, '');
+    const configRegex = configClean ? new RegExp(`^(_?${configClean})(.*)$`, 'i') : null;
 
-        if (!result.assets[chapter]) {
-          result.assets[chapter] = [];
+    const raMatch = remainder.match(readAloudRegex) || (configRegex ? remainder.match(configRegex) : null);
+
+    if (raMatch) {
+      const matchedPrefix = raMatch[1];
+      const suffix = remainder.slice(matchedPrefix.length);
+      const numberMatch = suffix.match(/\d+/);
+      const sortKey: number | string = numberMatch
+        ? parseInt(numberMatch[0], 10)
+        : suffix.replace(/^[_\-]/, '').toUpperCase();
+
+      if (!result.assets[chapter]) {
+        result.assets[chapter] = [];
+      }
+
+      result.assets[chapter].push({
+        assetType: 'Read Aloud',
+        filename,
+        sortKey,
+        chapter,
+        size: file.size,
+      });
+
+      matchedType = true;
+    }
+
+    // 2. Evaluate remaining asset types with longest prefix priority
+    if (!matchedType) {
+      const sortedTypeDefs = [...ASSET_TYPE_DEFINITIONS].sort((a, b) => {
+        const pA = (config.prefixes[a.id] || '').trim();
+        const pB = (config.prefixes[b.id] || '').trim();
+        return pB.length - pA.length;
+      });
+
+      for (const typeDef of sortedTypeDefs) {
+        if (typeDef.id === 'Read Aloud') continue;
+        const prefix = (config.prefixes[typeDef.id] || '').trim();
+        if (!prefix) continue;
+
+        // Support matching with or without leading underscore
+        const prefixRegex = new RegExp(`^(_?${prefix.replace(/^_/, '')})(.*)$`, 'i');
+        const prefixMatch = remainder.match(prefixRegex);
+
+        if (prefixMatch) {
+          const matchedPrefix = prefixMatch[1];
+          const suffix = remainder.slice(matchedPrefix.length);
+          const numberMatch = suffix.match(/\d+/);
+          const sortKey: number | string = numberMatch
+            ? parseInt(numberMatch[0], 10)
+            : suffix.replace(/^[_\-]/, '').toUpperCase();
+
+          if (!result.assets[chapter]) {
+            result.assets[chapter] = [];
+          }
+
+          result.assets[chapter].push({
+            assetType: typeDef.id,
+            filename,
+            sortKey,
+            chapter,
+            size: file.size,
+          });
+
+          matchedType = true;
+          break;
         }
-
-        result.assets[chapter].push({
-          assetType: typeDef.id,
-          filename,
-          sortKey,
-          chapter,
-          size: file.size,
-        });
-
-        matchedType = true;
-        break;
       }
     }
 

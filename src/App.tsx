@@ -6,6 +6,7 @@ import { DiagnosticsPanel } from './components/DiagnosticsPanel';
 import { ConfigModal } from './components/ConfigModal';
 import { AddRowModal } from './components/AddRowModal';
 import { RawViewModal } from './components/RawViewModal';
+import { DesktopExeModal } from './components/DesktopExeModal';
 import {
   FileItemInput,
   currentChapter,
@@ -36,6 +37,7 @@ export default function App() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isRawViewOpen, setIsRawViewOpen] = useState(false);
   const [isAddRowOpen, setIsAddRowOpen] = useState(false);
+  const [isDesktopExeOpen, setIsDesktopExeOpen] = useState(false);
   const [targetChapterForAdd, setTargetChapterForAdd] = useState<number | undefined>(undefined);
 
   // Load sample data function
@@ -231,6 +233,7 @@ export default function App() {
         onReset={handleReset}
         onOpenConfig={() => setIsConfigOpen(true)}
         onOpenRawView={() => setIsRawViewOpen(true)}
+        onOpenDesktopExe={() => setIsDesktopExeOpen(true)}
         onExportCsv={handleExportCsv}
         hasRows={rows.length > 0}
       />
@@ -320,6 +323,12 @@ export default function App() {
         onClose={() => setIsRawViewOpen(false)}
         rawCsv={rawCsvContent}
         onDownload={handleExportCsv}
+      />
+
+      {/* Desktop EXE & Package Modal */}
+      <DesktopExeModal
+        isOpen={isDesktopExeOpen}
+        onClose={() => setIsDesktopExeOpen(false)}
       />
     </div>
   );

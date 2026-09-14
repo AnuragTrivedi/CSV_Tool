@@ -13,13 +13,15 @@ export const SAMPLE_CSV_CONTENT = `isbn,rowType,sequence,name,groupName,url,acti
 ,chapter,14,Area,,,,,FALSE,,FALSE,FALSE,FALSE,,OLD,FALSE,FALSE`;
 
 export const SAMPLE_ASSET_FILES = [
-  // Chapter 8 (already has Animations 1-3, but here is an additional animation and an interactivity)
+  // Chapter 8 (already has Animations 1-3, but here is an additional animation, read aloud, and interactivity)
   'MathsWiz2026_Class8_Part2_CH08_VID04.mp4',
+  'SPNK_CL04_CH08_VID_RA01.mp4', // Read Aloud asset with _VID_RA
   'MathsWiz2026_Class8_Part2_CH08_AC_01.zip',
   // Chapter 9 (currently empty in the CSV)
   'MathsWiz2026_Class8_Part2_CH09_CB_01.pdf',
   'MathsWiz2026_Class8_Part2_CH09_VID01.mp4',
   'MathsWiz2026_Class8_Part2_CH09_VID02.mp4',
+  'SPNK_CL04_CH09_VID_RA01.mp4', // Read Aloud asset with _VID_RA
   'MathsWiz2026_Class8_Part2_CH09_TM_01.pdf',
   'MathsWiz2026_Class8_Part2_CH09_WS_01.pdf',
   'MathsWiz2026_Class8_Part2_CH09_AC_01.zip',
