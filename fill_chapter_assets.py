@@ -73,8 +73,24 @@ DEFAULT_ROW_VALUES = {
 }
 
 TYPE_SPECIFIC_DEFAULT_COLUMN_VALUES: dict[str, dict[str, str]] = {
-    "Teacher Manual": {"openInMainContent": "TRUE"},
-    "Worksheet": {"openInMainContent": "TRUE"},
+    "Teacher Manual": {
+        "actionEnabled": "BOTH",
+        "allowTo": "TEACHER",
+        "openInMainContent": "TRUE",
+    },
+    "Worksheet": {
+        "actionEnabled": "BOTH",
+        "allowTo": "TEACHER",
+        "openInMainContent": "TRUE",
+    },
+    "Course Book": {
+        "isMainPdf": "TRUE",
+        "openInMainContent": "TRUE",
+    },
+    "Coursebook": {
+        "isMainPdf": "TRUE",
+        "openInMainContent": "TRUE",
+    },
 }
 
 REQUIRED_COLUMNS = {

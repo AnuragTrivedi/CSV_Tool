@@ -55,9 +55,12 @@ export const AddRowModal: React.FC<AddRowModalProps> = ({
       baseRow[h] = '';
     }
 
+    const typeOverrides = config.typeSpecificDefaultValues[selectedAssetType] || {};
+
     const newRow: CsvRow = {
       ...baseRow,
       ...config.defaultRowValues,
+      ...typeOverrides,
       rowType: rowType,
       sequence: sequence.trim(),
       name: finalName,

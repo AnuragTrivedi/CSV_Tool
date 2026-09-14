@@ -9,6 +9,9 @@ export interface AssetTypeDefinition {
   defaultPrefix: string;
   defaultSequence: number;
   openInMainContent?: boolean;
+  isMainPdf?: boolean;
+  actionEnabled?: string;
+  allowTo?: string;
 }
 
 export interface ScannedAssetItem {

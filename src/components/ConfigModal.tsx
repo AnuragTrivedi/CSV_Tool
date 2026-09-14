@@ -214,24 +214,98 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
 
           {/* TAB 3: DEFAULTS */}
           {activeTab === 'defaults' && (
-            <div className="space-y-4">
-              <p className="text-slate-600">
-                Default column values populated for newly inserted chapter asset rows:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {Object.entries(localConfig.defaultRowValues).map(([key, value]) => (
-                  <div key={key} className="space-y-1">
-                    <label className="font-medium text-slate-700 block text-[11px]">
-                      {key}
-                    </label>
-                    <input
-                      type="text"
-                      value={value}
-                      onChange={(e) => handleDefaultValueChange(key, e.target.value)}
-                      className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
-                    />
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-1">
+                  Type-Specific Overrides
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Automatic column presets applied based on the detected asset type:
+                </p>
+                <div className="space-y-2.5">
+                  <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200/80">
+                    <div className="flex items-center justify-between font-semibold text-emerald-900 text-xs mb-1.5">
+                      <span>Course Book</span>
+                      <span className="text-[10px] bg-emerald-200/70 text-emerald-800 px-1.5 py-0.5 rounded font-mono">CB</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-emerald-100">
+                        <span className="text-slate-600 font-mono text-[11px]">isMainPdf</span>
+                        <span className="font-semibold text-emerald-700 font-mono">TRUE</span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-emerald-100">
+                        <span className="text-slate-600 font-mono text-[11px]">openInMainContent</span>
+                        <span className="font-semibold text-emerald-700 font-mono">TRUE</span>
+                      </div>
+                    </div>
                   </div>
-                ))}
+
+                  <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200/80">
+                    <div className="flex items-center justify-between font-semibold text-amber-900 text-xs mb-1.5">
+                      <span>Teacher Manual</span>
+                      <span className="text-[10px] bg-amber-200/70 text-amber-800 px-1.5 py-0.5 rounded font-mono">TM</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-amber-100">
+                        <span className="text-slate-600 font-mono text-[11px]">actionEnabled</span>
+                        <span className="font-semibold text-amber-700 font-mono">BOTH</span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-amber-100">
+                        <span className="text-slate-600 font-mono text-[11px]">allowTo</span>
+                        <span className="font-semibold text-amber-700 font-mono">TEACHER</span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-amber-100">
+                        <span className="text-slate-600 font-mono text-[11px]">openInMainContent</span>
+                        <span className="font-semibold text-amber-700 font-mono">TRUE</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-200/80">
+                    <div className="flex items-center justify-between font-semibold text-blue-900 text-xs mb-1.5">
+                      <span>Worksheet</span>
+                      <span className="text-[10px] bg-blue-200/70 text-blue-800 px-1.5 py-0.5 rounded font-mono">WS</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-blue-100">
+                        <span className="text-slate-600 font-mono text-[11px]">actionEnabled</span>
+                        <span className="font-semibold text-blue-700 font-mono">BOTH</span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-blue-100">
+                        <span className="text-slate-600 font-mono text-[11px]">allowTo</span>
+                        <span className="font-semibold text-blue-700 font-mono">TEACHER</span>
+                      </div>
+                      <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-blue-100">
+                        <span className="text-slate-600 font-mono text-[11px]">openInMainContent</span>
+                        <span className="font-semibold text-blue-700 font-mono">TRUE</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-1">
+                  Global Row Defaults
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Default column values populated for newly inserted chapter asset rows:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {Object.entries(localConfig.defaultRowValues).map(([key, value]) => (
+                    <div key={key} className="space-y-1">
+                      <label className="font-medium text-slate-700 block text-[11px]">
+                        {key}
+                      </label>
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => handleDefaultValueChange(key, e.target.value)}
+                        className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}

@@ -9,13 +9,13 @@ import {
 } from '../types';
 
 export const ASSET_TYPE_DEFINITIONS: AssetTypeDefinition[] = [
-  { id: 'Course Book', name: 'Course Book', groupName: 'Course Book', defaultPrefix: 'CB', defaultSequence: 1 },
+  { id: 'Course Book', name: 'Course Book', groupName: 'Course Book', defaultPrefix: 'CB', defaultSequence: 1, openInMainContent: true, isMainPdf: true },
   { id: 'Read Aloud', name: 'Read Aloud', groupName: 'Read aloud', defaultPrefix: 'VID_RA', defaultSequence: 3 },
   { id: 'Animation', name: 'Animation', groupName: 'Animation', defaultPrefix: 'VID', defaultSequence: 2 },
   { id: 'Audio', name: 'Audio', groupName: 'Audio', defaultPrefix: 'AUD', defaultSequence: 4 },
   { id: 'Listening Text', name: 'Listening Text', groupName: 'Listening Text', defaultPrefix: 'LT', defaultSequence: 5 },
-  { id: 'Teacher Manual', name: 'Teacher Manual', groupName: "Teacher's Manual", defaultPrefix: 'TM', defaultSequence: 6, openInMainContent: true },
-  { id: 'Worksheet', name: 'Worksheet', groupName: 'Worksheets', defaultPrefix: 'WS', defaultSequence: 7, openInMainContent: true },
+  { id: 'Teacher Manual', name: 'Teacher Manual', groupName: "Teacher's Manual", defaultPrefix: 'TM', defaultSequence: 6, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
+  { id: 'Worksheet', name: 'Worksheet', groupName: 'Worksheets', defaultPrefix: 'WS', defaultSequence: 7, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
   { id: 'Detailed Solution', name: 'Detailed Solution', groupName: 'Solutions', defaultPrefix: 'SOL', defaultSequence: 8 },
   { id: 'Answer Key', name: 'Answer Key', groupName: 'Answer Key', defaultPrefix: 'AK', defaultSequence: 9 },
   { id: 'Interactivities', name: 'Interactivity', groupName: 'Activity', defaultPrefix: 'AC', defaultSequence: 10 },
@@ -62,8 +62,24 @@ export const DEFAULT_ROW_VALUES: Record<string, string> = {
 };
 
 export const TYPE_SPECIFIC_DEFAULT_COLUMN_VALUES: Record<string, Record<string, string>> = {
-  'Teacher Manual': { openInMainContent: 'TRUE' },
-  'Worksheet': { openInMainContent: 'TRUE' },
+  'Teacher Manual': {
+    actionEnabled: 'BOTH',
+    allowTo: 'TEACHER',
+    openInMainContent: 'TRUE',
+  },
+  'Worksheet': {
+    actionEnabled: 'BOTH',
+    allowTo: 'TEACHER',
+    openInMainContent: 'TRUE',
+  },
+  'Course Book': {
+    isMainPdf: 'TRUE',
+    openInMainContent: 'TRUE',
+  },
+  'Coursebook': {
+    isMainPdf: 'TRUE',
+    openInMainContent: 'TRUE',
+  },
 };
 
 export const REQUIRED_COLUMNS = [
