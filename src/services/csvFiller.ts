@@ -10,28 +10,30 @@ import {
 
 export const ASSET_TYPE_DEFINITIONS: AssetTypeDefinition[] = [
   { id: 'Course Book', name: 'Course Book', groupName: 'Course Book', defaultPrefix: 'CB', defaultSequence: 1, openInMainContent: true, isMainPdf: true },
-  { id: 'Read Aloud', name: 'Read Aloud', groupName: 'Read aloud', defaultPrefix: 'VID_RA', defaultSequence: 3 },
   { id: 'Animation', name: 'Animation', groupName: 'Animation', defaultPrefix: 'VID', defaultSequence: 2 },
+  { id: 'Read Aloud', name: 'Read Aloud', groupName: 'Read aloud', defaultPrefix: 'VID_RA', defaultSequence: 3 },
   { id: 'Audio', name: 'Audio', groupName: 'Audio', defaultPrefix: 'AUD', defaultSequence: 4 },
-  { id: 'Listening Text', name: 'Listening Text', groupName: 'Listening Text', defaultPrefix: 'LT', defaultSequence: 5 },
-  { id: 'Teacher Manual', name: 'Teacher Manual', groupName: "Teacher's Manual", defaultPrefix: 'TM', defaultSequence: 6, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
-  { id: 'Worksheet', name: 'Worksheet', groupName: 'Worksheets', defaultPrefix: 'WS', defaultSequence: 7, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
-  { id: 'Detailed Solution', name: 'Detailed Solution', groupName: 'Solutions', defaultPrefix: 'SOL', defaultSequence: 8 },
-  { id: 'Answer Key', name: 'Answer Key', groupName: 'Answer Key', defaultPrefix: 'AK', defaultSequence: 9 },
-  { id: 'Interactivities', name: 'Interactivity', groupName: 'Activity', defaultPrefix: 'AC', defaultSequence: 10 },
+  { id: 'Interactivities', name: 'Interactivity', groupName: 'Activity', defaultPrefix: 'AC', defaultSequence: 5 },
+  { id: 'Fun with words', name: 'Fun with words', groupName: 'video', defaultPrefix: 'FWW', defaultSequence: 6 },
+  { id: 'Teacher Manual', name: 'Teacher Manual', groupName: "Teacher's Manual", defaultPrefix: 'TM', defaultSequence: 7, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
+  { id: 'Worksheet', name: 'Worksheet', groupName: 'Worksheets', defaultPrefix: 'WS', defaultSequence: 8, openInMainContent: true, actionEnabled: 'BOTH', allowTo: 'TEACHER' },
+  { id: 'Detailed Solution', name: 'Detailed Solution', groupName: 'Solutions', defaultPrefix: 'SOL', defaultSequence: 9 },
+  { id: 'Answer Key', name: 'Answer Key', groupName: 'Answer Key', defaultPrefix: 'AK', defaultSequence: 10 },
+  { id: 'Listening Text', name: 'Listening Text', groupName: 'Listening Text', defaultPrefix: 'LT', defaultSequence: 11 },
 ];
 
 export const DEFAULT_PREFIXES: Record<string, string> = {
   'Course Book': 'CB',
-  'Read Aloud': 'VID_RA',
   'Animation': 'VID',
+  'Read Aloud': 'VID_RA',
+  'Audio': 'AUD',
   'Interactivities': 'AC',
+  'Fun with words': 'FWW',
   'Teacher Manual': 'TM',
   'Worksheet': 'WS',
-  'Audio': 'AUD',
-  'Listening Text': 'LT',
   'Detailed Solution': 'SOL',
   'Answer Key': 'AK',
+  'Listening Text': 'LT',
 };
 
 export const DEFAULT_ASSET_SEQUENCES: Record<string, number> = {
@@ -39,12 +41,13 @@ export const DEFAULT_ASSET_SEQUENCES: Record<string, number> = {
   'Animation': 2,
   'Read Aloud': 3,
   'Audio': 4,
-  'Listening Text': 5,
-  'Teacher Manual': 6,
-  'Worksheet': 7,
-  'Detailed Solution': 8,
-  'Answer Key': 9,
-  'Interactivities': 10,
+  'Interactivities': 5,
+  'Fun with words': 6,
+  'Teacher Manual': 7,
+  'Worksheet': 8,
+  'Detailed Solution': 9,
+  'Answer Key': 10,
+  'Listening Text': 11,
 };
 
 export const DEFAULT_ROW_VALUES: Record<string, string> = {

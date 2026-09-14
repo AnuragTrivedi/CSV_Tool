@@ -24,25 +24,27 @@ ASSET_TYPES = (
     ("Animation", "Animation"),
     ("Read Aloud", "Read aloud"),
     ("Audio", "Audio"),
-    ("Listening Text", "Listening Text"),
+    ("Interactivities", "Activity"),
+    ("Fun with words", "video"),
     ("Teacher Manual", "Teacher's Manual"),
     ("Worksheet", "Worksheets"),
     ("Detailed Solution", "Solutions"),
     ("Answer Key", "Answer Key"),
-    ("Interactivities", "Activity"),
+    ("Listening Text", "Listening Text"),
 )
 
 DEFAULT_PREFIXES = {
     "Course Book": "CB",
-    "Read Aloud": "VID_RA",
     "Animation": "VID",
+    "Read Aloud": "VID_RA",
+    "Audio": "AUD",
     "Interactivities": "AC",
+    "Fun with words": "FWW",
     "Teacher Manual": "TM",
     "Worksheet": "WS",
-    "Audio": "AUD",
-    "Listening Text": "LT",
     "Detailed Solution": "SOL",
     "Answer Key": "AK",
+    "Listening Text": "LT",
 }
 
 DEFAULT_ASSET_SEQUENCES: dict[str, int] = {
@@ -50,12 +52,13 @@ DEFAULT_ASSET_SEQUENCES: dict[str, int] = {
     "Animation": 2,
     "Read Aloud": 3,
     "Audio": 4,
-    "Listening Text": 5,
-    "Teacher Manual": 6,
-    "Worksheet": 7,
-    "Detailed Solution": 8,
-    "Answer Key": 9,
-    "Interactivities": 10,
+    "Interactivities": 5,
+    "Fun with words": 6,
+    "Teacher Manual": 7,
+    "Worksheet": 8,
+    "Detailed Solution": 9,
+    "Answer Key": 10,
+    "Listening Text": 11,
 }
 
 DEFAULT_ROW_VALUES = {

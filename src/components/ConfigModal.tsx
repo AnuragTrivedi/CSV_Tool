@@ -112,7 +112,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
             }`}
           >
             <ListOrdered className="w-3.5 h-3.5" />
-            <span>Sequences (1-9)</span>
+            <span>Sequences (1-11)</span>
           </button>
           <button
             onClick={() => setActiveTab('defaults')}

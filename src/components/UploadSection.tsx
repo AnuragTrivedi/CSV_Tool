@@ -19,6 +19,8 @@ interface UploadSectionProps {
   csvChapterCount: number;
   missingRequiredColumns: string[];
   assetFiles: FileItemInput[];
+  isSampleDataActive?: boolean;
+  onDismissSampleData?: () => void;
   onCsvFileLoaded: (content: string, filename: string) => void;
   onAssetFilesChanged: (files: FileItemInput[]) => void;
   onRunPopulate: () => void;
@@ -32,6 +34,8 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
   csvChapterCount,
   missingRequiredColumns,
   assetFiles,
+  isSampleDataActive,
+  onDismissSampleData,
   onCsvFileLoaded,
   onAssetFilesChanged,
   onRunPopulate,
@@ -43,6 +47,7 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
   const [pastedAssetNames, setPastedAssetNames] = useState('');
   const [isCsvDragging, setIsCsvDragging] = useState(false);
   const [isAssetsDragging, setIsAssetsDragging] = useState(false);
+  const [showFileList, setShowFileList] = useState(false);
 
   const csvFileInputRef = useRef<HTMLInputElement | null>(null);
   const folderInputRef = useRef<HTMLInputElement | null>(null);
@@ -64,17 +69,24 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
   };
 
   // Handle files
-  const handleFilesAdded = (fileList: FileList | null) => {
+  const handleFilesAdded = (fileList: FileList | null, isFolderSelect: boolean = false) => {
     if (!fileList || fileList.length === 0) return;
     const newItems: FileItemInput[] = [];
     for (let i = 0; i < fileList.length; i++) {
       const f = fileList[i];
       newItems.push({ name: f.name, size: f.size });
     }
-    // Merge without duplicates by name
-    const existingNames = new Set(assetFiles.map(a => a.name.toLowerCase()));
-    const filtered = newItems.filter(item => !existingNames.has(item.name.toLowerCase()));
-    onAssetFilesChanged([...assetFiles, ...filtered]);
+
+    // If sample data was active OR user selected a complete directory folder, replace instead of append
+    if (isSampleDataActive || isFolderSelect) {
+      onAssetFilesChanged(newItems);
+      onDismissSampleData?.();
+    } else {
+      // Merge without duplicates by name
+      const existingNames = new Set(assetFiles.map(a => a.name.toLowerCase()));
+      const filtered = newItems.filter(item => !existingNames.has(item.name.toLowerCase()));
+      onAssetFilesChanged([...assetFiles, ...filtered]);
+    }
   };
 
   const handlePastedAssetSubmit = () => {
@@ -84,7 +96,12 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
       .map(l => l.trim())
       .filter(l => l.length > 0);
 
-    const existingNames = new Set(assetFiles.map(a => a.name.toLowerCase()));
+    const baseList = isSampleDataActive ? [] : assetFiles;
+    if (isSampleDataActive) {
+      onDismissSampleData?.();
+    }
+
+    const existingNames = new Set(baseList.map(a => a.name.toLowerCase()));
     const newItems: FileItemInput[] = [];
 
     for (const line of lines) {
@@ -96,8 +113,12 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
       }
     }
 
-    onAssetFilesChanged([...assetFiles, ...newItems]);
+    onAssetFilesChanged([...baseList, ...newItems]);
     setPastedAssetNames('');
+  };
+
+  const handleRemoveSingleFile = (nameToRemove: string) => {
+    onAssetFilesChanged(assetFiles.filter(a => a.name !== nameToRemove));
   };
 
   return (
@@ -291,7 +312,7 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
                 {...{ webkitdirectory: '', directory: '' }}
                 multiple
                 className="hidden"
-                onChange={(e) => handleFilesAdded(e.target.files)}
+                onChange={(e) => handleFilesAdded(e.target.files, true)}
               />
               <FolderUp className="w-8 h-8 mb-2 text-indigo-500" />
               <p className="text-sm font-medium text-slate-800">
@@ -314,7 +335,7 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
               onDrop={(e) => {
                 e.preventDefault();
                 setIsAssetsDragging(false);
-                handleFilesAdded(e.dataTransfer.files);
+                handleFilesAdded(e.dataTransfer.files, isSampleDataActive);
               }}
               onClick={() => filesInputRef.current?.click()}
               className={`flex-1 border-2 border-dashed rounded-xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
@@ -328,7 +349,7 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
                 ref={filesInputRef}
                 multiple
                 className="hidden"
-                onChange={(e) => handleFilesAdded(e.target.files)}
+                onChange={(e) => handleFilesAdded(e.target.files, isSampleDataActive)}
               />
               <FileText className="w-8 h-8 mb-2 text-indigo-500" />
               <p className="text-sm font-medium text-slate-800">
@@ -361,19 +382,57 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
 
           {/* Asset count & clear badge */}
           {assetFiles.length > 0 && (
-            <div className="mt-3 flex items-center justify-between px-3 py-2 bg-slate-100/80 rounded-lg text-xs">
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <ListPlus className="w-4 h-4 text-indigo-600" />
-                <span>{assetFiles.length} asset files queued</span>
+            <div className="mt-3 space-y-2">
+              <div className="flex items-center justify-between px-3 py-2 bg-slate-100/80 rounded-lg text-xs">
+                <div className="flex items-center gap-2 text-slate-700 font-medium">
+                  <ListPlus className="w-4 h-4 text-indigo-600" />
+                  <span>{assetFiles.length} asset files queued</span>
+                  {isSampleDataActive && (
+                    <span className="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">
+                      Demo Sample Files
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setShowFileList(!showFileList)}
+                    className="text-xs text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                  >
+                    {showFileList ? 'Hide list' : 'View files'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      onAssetFilesChanged([]);
+                      onDismissSampleData?.();
+                    }}
+                    className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+                    title="Clear all queued files"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear</span>
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={() => onAssetFilesChanged([])}
-                className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-                title="Clear all queued files"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Clear</span>
-              </button>
+
+              {/* Expandable queued file inspection list */}
+              {showFileList && (
+                <div className="max-h-48 overflow-y-auto bg-slate-50 border border-slate-200 rounded-lg p-2 divide-y divide-slate-200/60 text-xs">
+                  {assetFiles.map((file, idx) => (
+                    <div key={`${file.name}-${idx}`} className="py-1 px-1 flex items-center justify-between text-slate-700 hover:bg-white rounded transition-colors">
+                      <span className="truncate font-mono text-[11px]" title={file.name}>
+                        {file.name}
+                      </span>
+                      <button
+                        onClick={() => handleRemoveSingleFile(file.name)}
+                        className="ml-2 text-slate-400 hover:text-red-600 p-0.5 rounded cursor-pointer shrink-0"
+                        title="Remove this file from queue"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

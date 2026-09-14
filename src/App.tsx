@@ -39,6 +39,7 @@ export default function App() {
   const [isAddRowOpen, setIsAddRowOpen] = useState(false);
   const [isDesktopExeOpen, setIsDesktopExeOpen] = useState(false);
   const [targetChapterForAdd, setTargetChapterForAdd] = useState<number | undefined>(undefined);
+  const [isSampleDataActive, setIsSampleDataActive] = useState(false);
 
   // Load sample data function
   const loadSampleData = useCallback(() => {
@@ -52,6 +53,7 @@ export default function App() {
     setRows(parsedRows);
     setMissingRequiredCols(missingRequiredColumns);
     setAssetFiles(initialAssets);
+    setIsSampleDataActive(true);
     setLastInsertedCount(null);
     setLastSkippedCount(null);
     setChaptersTouched([]);
@@ -74,6 +76,12 @@ export default function App() {
     setLastInsertedCount(null);
     setLastSkippedCount(null);
     setChaptersTouched([]);
+
+    // If sample demo assets were active, purge them so they do not leak into the user's new book!
+    if (isSampleDataActive) {
+      setAssetFiles([]);
+      setIsSampleDataActive(false);
+    }
   };
 
   // Reset all
@@ -83,6 +91,7 @@ export default function App() {
     setRows([]);
     setMissingRequiredCols([]);
     setAssetFiles([]);
+    setIsSampleDataActive(false);
     setLastInsertedCount(null);
     setLastSkippedCount(null);
     setChaptersTouched([]);
@@ -248,8 +257,15 @@ export default function App() {
           csvChapterCount={csvChapters.size}
           missingRequiredColumns={missingRequiredCols}
           assetFiles={assetFiles}
+          isSampleDataActive={isSampleDataActive}
+          onDismissSampleData={() => setIsSampleDataActive(false)}
           onCsvFileLoaded={handleCsvFileLoaded}
-          onAssetFilesChanged={setAssetFiles}
+          onAssetFilesChanged={(files) => {
+            setAssetFiles(files);
+            if (isSampleDataActive) {
+              setIsSampleDataActive(false);
+            }
+          }}
           onRunPopulate={handleRunPopulate}
           canPopulate={rows.length > 0 && assetFiles.length > 0}
         />
